@@ -18,6 +18,12 @@
 void clk_SWI_Generate_DTMF(UArg arg0);
 void clk_SWI_GTZ_0697Hz(UArg arg0);
 void clk_SWI_GTZ_0770Hz(UArg arg0);
+void clk_SWI_GTZ_0852Hz(UArg arg0);
+void clk_SWI_GTZ_0941Hz(UArg arg0);
+void clk_SWI_GTZ_1209Hz(UArg arg0);
+void clk_SWI_GTZ_1336Hz(UArg arg0);
+void clk_SWI_GTZ_1477Hz(UArg arg0);
+void clk_SWI_GTZ_1633Hz(UArg arg0);
 
 extern void task0_dtmfGen(void);
 extern void task1_dtmfDetect(void);
@@ -46,6 +52,12 @@ void main(void)
     /* Instantiate 8 parallel ISRs for each of the eight Goertzel coefficients */
 	Clock_create(clk_SWI_GTZ_0697Hz, TIMEOUT, &clkParams, NULL);
 	Clock_create(clk_SWI_GTZ_0770Hz, TIMEOUT, &clkParams, NULL);
+	Clock_create(clk_SWI_GTZ_0852Hz, TIMEOUT, &clkParams, NULL);
+	Clock_create(clk_SWI_GTZ_0941Hz, TIMEOUT, &clkParams, NULL);
+	Clock_create(clk_SWI_GTZ_1209Hz, TIMEOUT, &clkParams, NULL);
+	Clock_create(clk_SWI_GTZ_1336Hz, TIMEOUT, &clkParams, NULL);
+	Clock_create(clk_SWI_GTZ_1477Hz, TIMEOUT, &clkParams, NULL);
+	Clock_create(clk_SWI_GTZ_1633Hz, TIMEOUT, &clkParams, NULL);
 
 	/* Start SYS_BIOS */
     BIOS_start();
@@ -146,3 +158,226 @@ void clk_SWI_GTZ_0770Hz(UArg arg0)
    	}
     	gtz_out[1] = Goertzel_Value;
 }
+void clk_SWI_GTZ_0852Hz(UArg arg0)
+{
+   	static int N = 0;
+   	static int Goertzel_Value = 0;
+
+   	static short delay;
+   	static short delay_1 = 0;
+   	static short delay_2 = 0;
+
+   	int prod1, prod2, prod3;
+
+   	short input, coef_1;
+   	coef_1 = coef[2];
+
+   	input =(short) sample;
+   	input = input >> 4;
+
+   	prod1 = (delay_1*coef_1)>>14;
+   	delay = input + (short)prod1 - delay_2;
+   	delay_2 = delay_1;
+   	delay_1 = delay;
+   	N++;
+
+   	if(N==206)
+   	{
+   		prod1 = (delay_1 * delay_1);
+   		prod2 = (delay_2 * delay_2);
+   		prod3 = (delay_1 * coef_1)>>14;
+   		prod3 = prod3 * delay_2;
+   		Goertzel_Value = (prod1 + prod2 - prod3);
+   		//Goertzel_value <<=4;
+   		N=0;
+   		delay_1 = delay_2 = 0;
+
+   	}
+    	gtz_out[2] = Goertzel_Value;
+}
+void clk_SWI_GTZ_0941Hz(UArg arg0)
+{
+   	static int N = 0;
+   	static int Goertzel_Value = 0;
+
+   	static short delay;
+   	static short delay_1 = 0;
+   	static short delay_2 = 0;
+
+   	int prod1, prod2, prod3;
+
+   	short input, coef_1;
+   	coef_1 = coef[3];
+
+   	input =(short) sample;
+   	input = input >> 4;
+
+   	prod1 = (delay_1*coef_1)>>14;
+   	delay = input + (short)prod1 - delay_2;
+   	delay_2 = delay_1;
+   	delay_1 = delay;
+   	N++;
+
+   	if(N==206)
+   	{
+   		prod1 = (delay_1 * delay_1);
+   		prod2 = (delay_2 * delay_2);
+   		prod3 = (delay_1 * coef_1)>>14;
+   		prod3 = prod3 * delay_2;
+   		Goertzel_Value = (prod1 + prod2 - prod3);
+   		//Goertzel_value <<=4;
+   		N=0;
+   		delay_1 = delay_2 = 0;
+
+   	}
+    	gtz_out[3] = Goertzel_Value;
+}
+void clk_SWI_GTZ_1209Hz(UArg arg0)
+{
+   	static int N = 0;
+   	static int Goertzel_Value = 0;
+
+   	static short delay;
+   	static short delay_1 = 0;
+   	static short delay_2 = 0;
+
+   	int prod1, prod2, prod3;
+
+   	short input, coef_1;
+   	coef_1 = coef[4];
+
+   	input =(short) sample;
+   	input = input >> 4;
+
+   	prod1 = (delay_1*coef_1)>>14;
+   	delay = input + (short)prod1 - delay_2;
+   	delay_2 = delay_1;
+   	delay_1 = delay;
+   	N++;
+
+   	if(N==206)
+   	{
+   		prod1 = (delay_1 * delay_1);
+   		prod2 = (delay_2 * delay_2);
+   		prod3 = (delay_1 * coef_1)>>14;
+   		prod3 = prod3 * delay_2;
+   		Goertzel_Value = (prod1 + prod2 - prod3);
+   		//Goertzel_value <<=4;
+   		N=0;
+   		delay_1 = delay_2 = 0;
+
+   	}
+    	gtz_out[4] = Goertzel_Value;
+}
+void clk_SWI_GTZ_1336Hz(UArg arg0)
+{
+   	static int N = 0;
+   	static int Goertzel_Value = 0;
+
+   	static short delay;
+   	static short delay_1 = 0;
+   	static short delay_2 = 0;
+
+   	int prod1, prod2, prod3;
+
+   	short input, coef_1;
+   	coef_1 = coef[5];
+
+   	input =(short) sample;
+   	input = input >> 4;
+
+   	prod1 = (delay_1*coef_1)>>14;
+   	delay = input + (short)prod1 - delay_2;
+   	delay_2 = delay_1;
+   	delay_1 = delay;
+   	N++;
+
+   	if(N==206)
+   	{
+   		prod1 = (delay_1 * delay_1);
+   		prod2 = (delay_2 * delay_2);
+   		prod3 = (delay_1 * coef_1)>>14;
+   		prod3 = prod3 * delay_2;
+   		Goertzel_Value = (prod1 + prod2 - prod3);
+   		//Goertzel_value <<=4;
+   		N=0;
+   		delay_1 = delay_2 = 0;
+
+   	}
+    	gtz_out[5] = Goertzel_Value;
+}
+void clk_SWI_GTZ_1477Hz(UArg arg0)
+{
+   	static int N = 0;
+   	static int Goertzel_Value = 0;
+
+   	static short delay;
+   	static short delay_1 = 0;
+   	static short delay_2 = 0;
+
+   	int prod1, prod2, prod3;
+
+   	short input, coef_1;
+   	coef_1 = coef[6];
+
+   	input =(short) sample;
+   	input = input >> 4;
+
+   	prod1 = (delay_1*coef_1)>>14;
+   	delay = input + (short)prod1 - delay_2;
+   	delay_2 = delay_1;
+   	delay_1 = delay;
+   	N++;
+
+   	if(N==206)
+   	{
+   		prod1 = (delay_1 * delay_1);
+   		prod2 = (delay_2 * delay_2);
+   		prod3 = (delay_1 * coef_1)>>14;
+   		prod3 = prod3 * delay_2;
+   		Goertzel_Value = (prod1 + prod2 - prod3);
+   		//Goertzel_value <<=4;
+   		N=0;
+   		delay_1 = delay_2 = 0;
+
+   	}
+    	gtz_out[6] = Goertzel_Value;
+}
+void clk_SWI_GTZ_1633Hz(UArg arg0)
+{
+   	static int N = 0;
+   	static int Goertzel_Value = 0;
+
+   	static short delay;
+   	static short delay_1 = 0;
+   	static short delay_2 = 0;
+
+   	int prod1, prod2, prod3;
+
+   	short input, coef_1;
+   	coef_1 = coef[7];
+
+   	input =(short) sample;
+   	input = input >> 4;
+
+   	prod1 = (delay_1*coef_1)>>14;
+   	delay = input + (short)prod1 - delay_2;
+   	delay_2 = delay_1;
+   	delay_1 = delay;
+   	N++;
+
+   	if(N==206)
+   	{
+   		prod1 = (delay_1 * delay_1);
+   		prod2 = (delay_2 * delay_2);
+   		prod3 = (delay_1 * coef_1)>>14;
+   		prod3 = prod3 * delay_2;
+   		Goertzel_Value = (prod1 + prod2 - prod3);
+   		//Goertzel_value <<=4;
+   		N=0;
+   		delay_1 = delay_2 = 0;
+
+   	}
+    	gtz_out[7] = Goertzel_Value;
+}
+

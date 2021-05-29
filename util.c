@@ -134,9 +134,10 @@ void task1_dtmfDetect(void)
 	    System_printf("\n The 2nd GTZ is %d\n", gtz_out[2]);
 	    System_printf("\n The 3rd GTZ is %d\n", gtz_out[3]);
 	    System_printf("\n The 4th GTZ is %d\n", gtz_out[4]);
+	    System_printf("\n The 5th GTZ is %d\n", gtz_out[5]);
+		System_printf("\n The 6th GTZ is %d\n", gtz_out[6]);
+		System_printf("\n The 7th GTZ is %d\n", gtz_out[7]);
 	    System_flush();
-
-
 	}
 }
 
