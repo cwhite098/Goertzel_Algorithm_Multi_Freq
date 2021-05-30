@@ -17,6 +17,7 @@
 
 void clk_SWI_Generate_DTMF(UArg arg0);
 void clk_SWI_GTZ_0697Hz(UArg arg0);
+void clk_SWI_Find_Result(UArg arg0);
 
 
 extern void task0_dtmfGen(void);
@@ -48,7 +49,6 @@ void main(void)
     /* Instantiate 8 parallel ISRs for each of the eight Goertzel coefficients */
 	Clock_create(clk_SWI_GTZ_0697Hz, TIMEOUT, &clkParams, NULL);
 
-
 	/* Start SYS_BIOS */
     BIOS_start();
 }
@@ -65,7 +65,8 @@ void clk_SWI_Generate_DTMF(UArg arg0)
 
 	tick = Clock_getTicks();
 
-	sample = (int) 32768.0*sin(2.0*PI*freq1*TICK_PERIOD*tick) + 32768.0*sin(2.0*PI*freq2*TICK_PERIOD*tick);
+	//sample = (int) 32768.0*sin(2.0*PI*freq1*TICK_PERIOD*tick) + 32768.0*sin(2.0*PI*freq2*TICK_PERIOD*tick);
+	sample = (int) 32768.0*sin(2.0*PI*697*TICK_PERIOD*tick) + 32768.0*sin(2.0*PI*freq2*TICK_PERIOD*tick);
 sample = sample >>8;
 }
 
@@ -87,13 +88,107 @@ void clk_SWI_GTZ_0697Hz(UArg arg0)
 
    	short input, coef_1;
 
-
-
    	coef_1 = coef[0];
     input = (short) (sample);
 
 // to be completed
+
+    	prod1 = (delay_1*coef_1)>>14;
+    	delay = input + (short)prod1 - delay_2;
+    	delay_2 = delay_1;
+    	delay_1 = delay;
+    	N++;
+
+    	if (N==206){
+    		prod1 = (delay_1 * delay_1);
+    		prod2 = (delay_2 * delay_2);
+    		prod3 = (delay_1 * coef_1)>>14;
+    		prod3 = prod3 * delay_2;
+    		Goertzel_Value = (prod1 + prod2 - prod3) >> 15;
+    		Goertzel_Value <<= 4;
+    		N = 0;
+    		delay_1 = delay_2 = 0;
+    	}
     	gtz_out[0] = Goertzel_Value;
+    	gtz_out[7] = Goertzel_Value;
+
+}
+
+void clk_SWI_Find_Result(UArg arg0)
+{
+	char result;
+		int no_of_results = 0;
+		if (gtz_out[0] > 50){
+			if (gtz_out[4] > 50){
+				result = '1';
+				no_of_results++;
+			} if (gtz_out[5]>50){
+				result = '2';
+				no_of_results++;
+			} if (gtz_out[6]>50){
+				result = '3';
+				no_of_results++;
+			} if (gtz_out[7]>50){
+				result = 'A';
+				no_of_results++;
+			}
+
+		} if (gtz_out[1] > 50){
+			if (gtz_out[4] > 50){
+				result = '4';
+				no_of_results++;
+			} if (gtz_out[5]>50){
+				result = '5';
+				no_of_results++;
+			} if (gtz_out[6]>50){
+				result = '6';
+				no_of_results++;
+			} if (gtz_out[7]>50){
+				result = 'B';
+				no_of_results++;
+			}
+
+		} if (gtz_out[2] > 50){
+			if (gtz_out[4] > 50){
+				result = '7';
+				no_of_results++;
+			} else if (gtz_out[5]>50){
+				result = '8';
+				no_of_results++;
+			} else if (gtz_out[6]>50){
+				result = '9';
+				no_of_results++;
+			} else {
+				result = 'C';
+				no_of_results++;
+			}
+
+		} if (gtz_out[3] > 50){
+			if (gtz_out[4] > 50){
+				result = '*';
+				no_of_results++;
+			} if (gtz_out[5]>50){
+				result = '0';
+				no_of_results++;
+			} if (gtz_out[6]>50){
+				result = '#';
+				no_of_results++;
+			} if (gtz_out[7]>50){
+				result = 'D';
+				no_of_results++;
+			}
+
+		}
 
 
+		if (no_of_results == 0){
+			System_printf("An error has occurred, no digit found");
+			System_flush();
+		} else if (no_of_results > 1){
+			System_printf("An error has occurred, multiple digits found");
+			System_flush();
+		} else {
+			System_printf("%c", result);
+			System_flush();
+		}
 }
