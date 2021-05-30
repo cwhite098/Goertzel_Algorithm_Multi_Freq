@@ -110,7 +110,6 @@ void clk_SWI_GTZ_0697Hz(UArg arg0)
     		delay_1 = delay_2 = 0;
     	}
     	gtz_out[0] = Goertzel_Value;
-    	gtz_out[7] = Goertzel_Value;
 
 }
 
