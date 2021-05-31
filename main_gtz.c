@@ -76,7 +76,7 @@ void clk_SWI_Generate_DTMF(UArg arg0)
 	tick = Clock_getTicks();
 
 	sample = (int) 32768.0*sin(2.0*PI*freq1*TICK_PERIOD*tick) + 32768.0*sin(2.0*PI*freq2*TICK_PERIOD*tick);
-	sample = sample >>12;
+	sample = sample >>8;
 }
 
 /*
@@ -86,6 +86,7 @@ void clk_SWI_Generate_DTMF(UArg arg0)
  */
 void clk_SWI_GTZ_0697Hz(UArg arg0)
 {
+	//just the algorithm from the notes but copied 8 times for each frequency.
    	static int N = 0;
    	static int Goertzel_Value = 0;
 
