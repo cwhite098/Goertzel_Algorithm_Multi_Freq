@@ -86,7 +86,7 @@ void clk_SWI_Generate_DTMF(UArg arg0)
  */
 void clk_SWI_GTZ_0697Hz(UArg arg0)
 {
-	//just the algorithm from the notes but copied 8 times for each frequency.
+	//Goertzel algorithm for each of the frequencies. Each frequency has its own clock function.
    	static int N = 0;
    	static int Goertzel_Value = 0;
 
