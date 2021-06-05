@@ -62,11 +62,17 @@ void clk_SWI_Generate_DTMF(UArg arg0)
 {
 	static int tick;
 
-
 	tick = Clock_getTicks();
 
+<<<<<<< Updated upstream
 	sample = (int) 32768.0*sin(2.0*PI*freq1*TICK_PERIOD*tick) + 32768.0*sin(2.0*PI*freq2*TICK_PERIOD*tick);
 sample = sample >>8;
+=======
+	sample = (int) 32768.0*sin(2.0*PI*freq1*TICK_PERIOD*tick)
+		+ 32768.0*sin(2.0*PI*freq2*TICK_PERIOD*tick);
+
+	sample = sample >>8;
+>>>>>>> Stashed changes
 }
 
 /*
@@ -76,6 +82,10 @@ sample = sample >>8;
  */
 void clk_SWI_GTZ_0697Hz(UArg arg0)
 {
+<<<<<<< Updated upstream
+=======
+	//Goertzel algorithm for 697Hz Detection
+>>>>>>> Stashed changes
    	static int N = 0;
    	static int Goertzel_Value = 0;
 
@@ -84,13 +94,38 @@ void clk_SWI_GTZ_0697Hz(UArg arg0)
    	static short delay_2 = 0;
 
    	int prod1, prod2, prod3;
-
    	short input, coef_1;
+<<<<<<< Updated upstream
 
 
 
    	coef_1 = coef[0];
     input = (short) (sample);
+=======
+   	coef_1 = coef[0]; //coef for 697Hz
+
+   	input =(short) sample; //takes signal as input
+   	input = input >> 4; //scale down to prevent overflow
+
+   	//FEEDBACK
+   	prod1 = (delay_1*coef_1)>>14;
+   	delay = input + (short)prod1 - delay_2;
+   	delay_2 = delay_1;
+   	delay_1 = delay;
+   	N++;
+
+   	//FEEDFORWARD
+   	if(N==206)
+   	{
+   		prod1 = (delay_1 * delay_1);
+   		prod2 = (delay_2 * delay_2);
+   		prod3 = (delay_1 * coef_1)>>14;
+   		prod3 = prod3 * delay_2;
+   		Goertzel_Value = (prod1 + prod2 - prod3);
+   		//Goertzel_value <<=4;
+   		N=0;
+   		delay_1 = delay_2 = 0;
+>>>>>>> Stashed changes
 
 // to be completed
     	gtz_out[0] = Goertzel_Value;
